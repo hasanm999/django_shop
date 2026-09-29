@@ -18,7 +18,7 @@ def detail(request):
     return render(request, 'detail.html')
 
 def shop(request):
-    return render(request, 'shop.html')
+    return render(request, 'shop_list.html')
 
 def cart(request):
     return render(request, 'cart.html')
