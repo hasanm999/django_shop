@@ -285,7 +285,7 @@ def create_ticket(request):
 
             ticket.save()
 
-            return redirect('ticket_list')
+            return redirect('accounts:ticket-list')
 
     else:
 
