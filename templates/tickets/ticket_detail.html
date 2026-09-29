@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Ticket Detail</title>
+
+    <link
+        href="{% static 'css/style.css' %}"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h2>
+            {{ ticket.subject }}
+        </h2>
+
+
+        <p>
+            <strong>From:</strong>
+
+            {{ ticket.sender.username }}
+        </p>
+
+
+        <p>
+            <strong>Date:</strong>
+
+            {{ ticket.created_at }}
+        </p>
+
+
+        <hr>
+
+
+        <h4>
+            Message
+        </h4>
+
+
+        <p>
+            {{ ticket.message }}
+        </p>
+
+
+        <br>
+
+
+        <a href="{% url 'tickets:ticket_list' %}">
+            Back to Tickets
+        </a>
+
+
+        <br>
+        <br>
+
+
+        <a href="{% url 'tickets:create_ticket' %}">
+            Create New Ticket
+        </a>
+
+    </div>
+
+</body>
+
+</html>

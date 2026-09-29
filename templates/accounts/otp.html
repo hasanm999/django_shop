@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>OTP Verification</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h2>OTP Verification</h2>
+
+
+        {% if purpose == 'register' %}
+
+            <p>
+                Please enter the OTP code to complete your registration.
+            </p>
+
+        {% elif purpose == 'login' %}
+
+            <p>
+                Please enter the OTP code to complete your login.
+            </p>
+
+        {% endif %}
+
+
+        {% if error %}
+
+            <p style="color: red;">
+                {{ error }}
+            </p>
+
+        {% endif %}
+
+
+        <!-- OTP Form -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="otp"
+                maxlength="6"
+                minlength="6"
+                placeholder="Enter 6-digit OTP"
+                required
+            >
+
+            <button type="submit">
+                Verify OTP
+            </button>
+
+        </form>
+
+
+        <br>
+
+
+        <!-- Resend Code -->
+
+        <form
+            method="POST"
+            action="{% url 'accounts:resend_code' %}"
+        >
+
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="purpose"
+                value="{{ purpose }}"
+            >
+
+            <button type="submit">
+                Resend Code Again
+            </button>
+
+        </form>
+
+
+    </div>
+
+</body>
+
+</html>

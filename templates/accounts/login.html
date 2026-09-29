@@ -1,0 +1,29 @@
+<h2>Login</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+    <input
+        type="text"
+        name="username"
+        placeholder="Username"
+    >
+
+    <input
+        type="password"
+        name="password"
+        placeholder="Password"
+    >
+
+    <button type="submit">
+        Login
+    </button>
+</form>
+
+<a href="{% url 'accounts:register' %}">
+    Create account
+</a>

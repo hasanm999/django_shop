@@ -1,0 +1,93 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Tickets</title>
+
+    <link
+        href="{% static 'css/style.css' %}"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h2>My Tickets</h2>
+
+
+        <a href="{% url 'accounts:create-ticket' %}">
+            Create New Ticket
+        </a>
+
+
+        <br>
+        <br>
+
+
+        {% if tickets %}
+
+            {% for ticket in tickets %}
+
+                <div>
+
+                    <h3>
+                        {{ ticket.subject }}
+                    </h3>
+
+                    <p>
+                        {{ ticket.message|truncatewords:20 }}
+                    </p>
+
+                    <small>
+                        {{ ticket.created_at }}
+                    </small>
+
+                    <br>
+
+                    <a
+                        href="{% url 'accounts:ticket-detail' ticket.id %}"
+                    >
+                        View Ticket
+                    </a>
+
+                </div>
+
+                <hr>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <p>
+                You don't have any tickets yet.
+            </p>
+
+        {% endif %}
+
+
+        <br>
+
+        <a href="{% url 'website:index' %}">
+            Back to Home
+        </a>
+
+    </div>
+
+</body>
+
+</html>
