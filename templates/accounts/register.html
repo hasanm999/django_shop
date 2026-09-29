@@ -1,45 +1,285 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Register</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Register</title>
+
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+
+    body {
+        font-family: Arial, sans-serif;
+
+        background: linear-gradient(
+            135deg,
+            #667eea,
+            #764ba2
+        );
+
+        min-height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: 20px;
+    }
+
+
+    /* Main Container */
+
+    .container {
+        width: 100%;
+        max-width: 450px;
+
+        background: #ffffff;
+
+        padding: 40px;
+
+        border-radius: 15px;
+
+        box-shadow:
+            0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+
+    /* Title */
+
+    .container h2 {
+        text-align: center;
+
+        margin-bottom: 30px;
+
+        color: #333;
+
+        font-size: 30px;
+    }
+
+
+    /* Form */
+
+    .container form {
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    /* Django Form */
+
+    .container form p {
+        margin-bottom: 18px;
+    }
+
+
+    .container form label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #444;
+
+        font-size: 14px;
+
+        font-weight: bold;
+    }
+
+
+    .container form input {
+        width: 100%;
+
+        padding: 13px 15px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 8px;
+
+        font-size: 15px;
+
+        outline: none;
+
+        transition: 0.3s;
+    }
+
+
+    .container form input:focus {
+        border-color: #667eea;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(102, 126, 234, 0.15);
+    }
+
+
+    /* Help Text */
+
+    .container form .helptext {
+        display: block;
+
+        margin-top: 6px;
+
+        color: #777;
+
+        font-size: 12px;
+
+        line-height: 1.5;
+    }
+
+
+    /* Error Messages */
+
+    .container form .errorlist {
+        list-style: none;
+
+        color: #d93025;
+
+        background: #ffe5e5;
+
+        padding: 8px 10px;
+
+        margin-bottom: 8px;
+
+        border-radius: 6px;
+
+        font-size: 13px;
+    }
+
+
+    /* Register Button */
+
+    .container button {
+        width: 100%;
+
+        padding: 13px;
+
+        margin-top: 5px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background: #667eea;
+
+        color: white;
+
+        font-size: 16px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+
+    .container button:hover {
+        background: #5568d8;
+
+        transform: translateY(-1px);
+    }
+
+
+    /* Login Text */
+
+    .login-text {
+        text-align: center;
+
+        margin-top: 22px;
+
+        color: #666;
+
+        font-size: 14px;
+    }
+
+
+    /* Login Link */
+
+    .login-text a {
+        color: #667eea;
+
+        text-decoration: none;
+
+        font-weight: bold;
+    }
+
+
+    .login-text a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* Mobile */
+
+    @media (max-width: 500px) {
+
+        .container {
+            padding: 30px 25px;
+        }
+
+        .container h2 {
+            font-size: 26px;
+        }
+
+    }
+
+</style>
+
+
 </head>
 
 <body>
 
-    <div class="container">
 
-        <h2>Create Account</h2>
+<div class="container">
 
-        <form method="POST">
+    <h2>Create Account</h2>
 
-            {% csrf_token %}
 
-            {{ form.as_p }}
+    <form method="POST">
 
-            <button type="submit">
-                Register
-            </button>
+        {% csrf_token %}
 
-        </form>
+        {{ form.as_p }}
 
-        <p>
-            Already have an account?
-            <a href="{% url 'login' %}">
-                Login
-            </a>
-        </p>
 
-    </div>
+        <button type="submit">
+            Register
+        </button>
+
+    </form>
+
+
+    <p class="login-text">
+
+        Already have an account?
+
+        <a href="{% url 'accounts:login' %}">
+            Login
+        </a>
+
+    </p>
+
+</div>
+
 
 </body>
 
 </html>
-```

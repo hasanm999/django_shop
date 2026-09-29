@@ -1,29 +1,163 @@
-<h2>Login</h2>
+<!DOCTYPE html>
 
-<form method="POST">
-    {% csrf_token %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
+<title>Login</title>
 
-    <input
-        type="text"
-        name="username"
-        placeholder="Username"
-    >
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-    <input
-        type="password"
-        name="password"
-        placeholder="Password"
-    >
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
 
-    <button type="submit">
-        Login
-    </button>
-</form>
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-<a href="{% url 'accounts:register' %}">
-    Create account
-</a>
+    .login-container {
+        width: 100%;
+        max-width: 400px;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 15px;
+
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+        font-size: 30px;
+    }
+
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-container input {
+        width: 100%;
+        padding: 13px 15px;
+        margin-bottom: 18px;
+
+        border: 1px solid #ddd;
+        border-radius: 8px;
+
+        font-size: 15px;
+        outline: none;
+
+        transition: 0.3s;
+    }
+
+    .login-container input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    }
+
+    .error-message {
+        background: #ffe5e5;
+        color: #d93025;
+
+        padding: 10px 12px;
+        margin-bottom: 18px;
+
+        border-radius: 7px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .login-container button {
+        width: 100%;
+        padding: 13px;
+
+        border: none;
+        border-radius: 8px;
+
+        background: #667eea;
+        color: white;
+
+        font-size: 16px;
+        font-weight: bold;
+
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .login-container button:hover {
+        background: #5568d8;
+        transform: translateY(-1px);
+    }
+
+    .register-link {
+        display: block;
+        text-align: center;
+
+        margin-top: 22px;
+
+        color: #667eea;
+        text-decoration: none;
+
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .register-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+
+</head>
+
+<body>
+
+
+<div class="login-container">
+
+    <h2>Login</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+        >
+
+        <button type="submit">
+            Login
+        </button>
+    </form>
+
+    <a href="{% url 'accounts:register' %}" class="register-link">
+        Create account
+    </a>
+
+</div>
+
+</body>
+</html>

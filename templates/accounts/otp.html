@@ -1,106 +1,289 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta charset="UTF-8">
 
-    <title>OTP Verification</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <link
-        rel="stylesheet"
-        href="{% static 'css/style.css' %}"
-    >
+<title>OTP Verification</title>
+
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+
+    body {
+        font-family: Arial, sans-serif;
+
+        background: linear-gradient(
+            135deg,
+            #667eea,
+            #764ba2
+        );
+
+        min-height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+    /* Main Container */
+
+    .container {
+        width: 100%;
+        max-width: 400px;
+
+        background: #ffffff;
+
+        padding: 40px;
+
+        border-radius: 15px;
+
+        box-shadow:
+            0 15px 35px rgba(0, 0, 0, 0.2);
+
+        text-align: center;
+    }
+
+
+    /* Title */
+
+    .container h2 {
+        margin-bottom: 15px;
+
+        color: #333;
+
+        font-size: 30px;
+    }
+
+
+    /* Description */
+
+    .description {
+        color: #666;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+
+        margin-bottom: 25px;
+    }
+
+
+    /* Error */
+
+    .error-message {
+        background: #ffe5e5;
+
+        color: #d93025;
+
+        padding: 10px 12px;
+
+        margin-bottom: 18px;
+
+        border-radius: 7px;
+
+        font-size: 14px;
+    }
+
+
+    /* OTP Input */
+
+    .container input[type="text"] {
+        width: 100%;
+
+        padding: 13px 15px;
+
+        margin-bottom: 18px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 8px;
+
+        font-size: 18px;
+
+        text-align: center;
+
+        letter-spacing: 5px;
+
+        outline: none;
+
+        transition: 0.3s;
+    }
+
+
+    .container input[type="text"]:focus {
+        border-color: #667eea;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(102, 126, 234, 0.15);
+    }
+
+
+    /* Buttons */
+
+    .container button {
+        width: 100%;
+
+        padding: 13px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background: #667eea;
+
+        color: white;
+
+        font-size: 16px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+
+    .container button:hover {
+        background: #5568d8;
+
+        transform: translateY(-1px);
+    }
+
+
+    /* Resend Form */
+
+    .resend-form {
+        margin-top: 15px;
+    }
+
+
+    /* Resend Button */
+
+    .container .resend-button {
+        background: transparent;
+
+        color: #667eea;
+
+        border: 1px solid #667eea;
+
+        font-size: 14px;
+    }
+
+
+    .container .resend-button:hover {
+        background: #667eea;
+
+        color: white;
+    }
+
+</style>
+
 
 </head>
 
-
 <body>
 
-    <div class="container">
 
-        <h2>OTP Verification</h2>
+<div class="container">
 
-
-        {% if purpose == 'register' %}
-
-            <p>
-                Please enter the OTP code to complete your registration.
-            </p>
-
-        {% elif purpose == 'login' %}
-
-            <p>
-                Please enter the OTP code to complete your login.
-            </p>
-
-        {% endif %}
+    <h2>OTP Verification</h2>
 
 
-        {% if error %}
+    {% if purpose == 'register' %}
 
-            <p style="color: red;">
-                {{ error }}
-            </p>
+        <p class="description">
+            Please enter the OTP code to complete
+            your registration.
+        </p>
 
-        {% endif %}
+    {% elif purpose == 'login' %}
 
+        <p class="description">
+            Please enter the OTP code to complete
+            your login.
+        </p>
 
-        <!-- OTP Form -->
-
-        <form method="POST">
-
-            {% csrf_token %}
-
-            <input
-                type="text"
-                name="otp"
-                maxlength="6"
-                minlength="6"
-                placeholder="Enter 6-digit OTP"
-                required
-            >
-
-            <button type="submit">
-                Verify OTP
-            </button>
-
-        </form>
+    {% endif %}
 
 
-        <br>
+    {% if error %}
+
+        <p class="error-message">
+            {{ error }}
+        </p>
+
+    {% endif %}
 
 
-        <!-- Resend Code -->
+    <!-- OTP Form -->
 
-        <form
-            method="POST"
-            action="{% url 'accounts:resend_code' %}"
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="otp"
+            maxlength="6"
+            minlength="6"
+            placeholder="Enter 6-digit OTP"
+            required
+            pattern="[0-9]{6}"
         >
 
-            {% csrf_token %}
+        <button type="submit">
+            Verify OTP
+        </button>
 
-            <input
-                type="hidden"
-                name="purpose"
-                value="{{ purpose }}"
-            >
-
-            <button type="submit">
-                Resend Code Again
-            </button>
-
-        </form>
+    </form>
 
 
-    </div>
+    <!-- Resend Code -->
+
+    <form
+        method="POST"
+        action="{% url 'accounts:resend_code' %}"
+        class="resend-form"
+    >
+
+        {% csrf_token %}
+
+        <input
+            type="hidden"
+            name="purpose"
+            value="{{ purpose }}"
+        >
+
+        <button
+            type="submit"
+            class="resend-button"
+        >
+            Resend Code Again
+        </button>
+
+    </form>
+
+</div>
+
 
 </body>
 

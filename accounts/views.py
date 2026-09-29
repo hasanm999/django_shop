@@ -22,7 +22,7 @@ def register(request):
 
             request.session['register_data'] = request.POST.dict()
 
-            return redirect('register_otp')
+            return redirect('accounts:register_otp')
 
     else:
 
@@ -72,7 +72,7 @@ def register_otp(request):
                     None
                 )
 
-                return redirect('login')
+                return redirect('accounts:login')
 
         return render(
             request,
