@@ -475,6 +475,15 @@
 
     <div class="profile-links">
 
+        {% if items %}
+
+            <a href="{% url 'order:checkout' %}">
+                Checkout
+            </a>
+
+        {% endif %}
+
+
         <a href="{% url 'product:list' %}">
             Continue Shopping
         </a>

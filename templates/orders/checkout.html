@@ -1,0 +1,253 @@
+{% extends 'base/main.html' %}
+{% load static %}
+
+{% block title %}Checkout{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    /* Order Summary */
+
+    .summary-row {
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 12px 0;
+
+        border-bottom: 1px solid #eee;
+
+        color: #555;
+
+        font-size: 14px;
+    }
+
+
+    .summary-total {
+        display: flex;
+
+        justify-content: space-between;
+
+        margin: 20px 0 10px;
+
+        padding: 18px 20px;
+
+        border-radius: 10px;
+
+        background: #f5f6ff;
+
+        color: #333;
+
+        font-size: 18px;
+
+        font-weight: bold;
+    }
+
+
+    .summary-total span:last-child {
+        color: #667eea;
+    }
+
+
+    /* Django Form */
+
+    .profile-container form p {
+        margin-bottom: 18px;
+    }
+
+
+    .profile-container label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #444;
+
+        font-size: 14px;
+
+        font-weight: bold;
+    }
+
+
+    .profile-container input,
+    .profile-container textarea {
+        width: 100%;
+
+        padding: 13px 15px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 8px;
+
+        font-family: Arial, sans-serif;
+
+        font-size: 15px;
+
+        outline: none;
+
+        transition: 0.3s;
+    }
+
+
+    .profile-container textarea {
+        min-height: 100px;
+
+        resize: vertical;
+    }
+
+
+    .profile-container input:focus,
+    .profile-container textarea:focus {
+        border-color: #667eea;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(102, 126, 234, 0.15);
+    }
+
+
+    .profile-container .helptext {
+        display: block;
+
+        margin-top: 6px;
+
+        color: #777;
+
+        font-size: 12px;
+    }
+
+
+    .profile-container .errorlist {
+        list-style: none;
+
+        color: #d93025;
+
+        background: #ffe5e5;
+
+        padding: 8px 10px;
+
+        margin-bottom: 8px;
+
+        border-radius: 6px;
+
+        font-size: 13px;
+    }
+
+
+    .save-button {
+        width: 100%;
+
+        padding: 13px;
+
+        margin-top: 5px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background: #667eea;
+
+        color: white;
+
+        font-size: 16px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+
+    .save-button:hover {
+        background: #5568d8;
+
+        transform: translateY(-1px);
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <h2>
+        Checkout
+    </h2>
+
+
+    {% for m in messages %}
+
+        <div class="message {{ m.tags }}">
+            {{ m }}
+        </div>
+
+    {% endfor %}
+
+
+    <h3>
+        Order Summary
+    </h3>
+
+
+    {% for item in items %}
+
+        <div class="summary-row">
+
+            <span>
+                {{ item.product.name }} x {{ item.quantity }}
+            </span>
+
+            <span>
+                {{ item.total_price }}
+            </span>
+
+        </div>
+
+    {% endfor %}
+
+
+    <div class="summary-total">
+
+        <span>Total</span>
+
+        <span>{{ total }}</span>
+
+    </div>
+
+
+    <h3>
+        Shipping Information
+    </h3>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button
+            type="submit"
+            class="save-button"
+        >
+            Place Order
+        </button>
+
+    </form>
+
+
+    <div class="profile-links">
+
+        <a href="{% url 'cart:detail' %}">
+            Back to Cart
+        </a>
+
+    </div>
+
+{% endblock %}

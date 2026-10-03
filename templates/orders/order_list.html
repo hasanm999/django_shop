@@ -1,0 +1,227 @@
+{% extends 'base/main.html' %}
+{% load static %}
+
+{% block title %}My Orders{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    .order-card {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 15px;
+
+        margin-bottom: 15px;
+
+        padding: 20px;
+
+        border: 1px solid #eee;
+
+        border-radius: 12px;
+
+        color: #333;
+
+        text-decoration: none;
+
+        transition: 0.3s;
+    }
+
+
+    .order-card:hover {
+        border-color: #667eea;
+
+        box-shadow:
+            0 8px 20px rgba(102, 126, 234, 0.2);
+
+        transform: translateY(-2px);
+    }
+
+
+    .order-title {
+        margin-bottom: 6px;
+
+        font-size: 17px;
+
+        font-weight: bold;
+    }
+
+
+    .order-meta {
+        color: #777;
+
+        font-size: 13px;
+    }
+
+
+    .order-side {
+        text-align: right;
+    }
+
+
+    .order-total {
+        margin-bottom: 8px;
+
+        color: #667eea;
+
+        font-size: 18px;
+
+        font-weight: bold;
+    }
+
+
+    /* Status Badges */
+
+    .status {
+        display: inline-block;
+
+        padding: 4px 12px;
+
+        border-radius: 20px;
+
+        font-size: 12px;
+
+        font-weight: bold;
+    }
+
+
+    .status-pending {
+        background: #fff4e0;
+
+        color: #b26a00;
+    }
+
+
+    .status-processing {
+        background: #e8eeff;
+
+        color: #3b4ccb;
+    }
+
+
+    .status-shipped {
+        background: #e0f4ff;
+
+        color: #0b6a99;
+    }
+
+
+    .status-delivered {
+        background: #e6f4ea;
+
+        color: #1e7e34;
+    }
+
+
+    .status-canceled {
+        background: #ffe5e5;
+
+        color: #d93025;
+    }
+
+
+    .empty-state {
+        padding: 30px 0;
+
+        text-align: center;
+
+        color: #777;
+    }
+
+
+    /* Mobile */
+
+    @media (max-width: 600px) {
+
+        .order-side {
+            text-align: left;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <h2>
+        My Orders
+    </h2>
+
+
+    {% for m in messages %}
+
+        <div class="message {{ m.tags }}">
+            {{ m }}
+        </div>
+
+    {% endfor %}
+
+
+    {% if orders %}
+
+        {% for order in orders %}
+
+            <a
+                href="{% url 'order:detail' order.pk %}"
+                class="order-card"
+            >
+
+                <div>
+
+                    <div class="order-title">
+                        Order #{{ order.pk }}
+                    </div>
+
+                    <div class="order-meta">
+                        {{ order.created_at|date:"Y-m-d H:i" }}
+                        &middot;
+                        {{ order.items.all|length }} item{{ order.items.all|length|pluralize }}
+                    </div>
+
+                </div>
+
+
+                <div class="order-side">
+
+                    <div class="order-total">
+                        {{ order.total_price }}
+                    </div>
+
+                    <span class="status status-{{ order.status }}">
+                        {{ order.get_status_display }}
+                    </span>
+
+                </div>
+
+            </a>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p class="empty-state">
+            You have not placed any orders yet.
+        </p>
+
+    {% endif %}
+
+
+    <div class="profile-links">
+
+        <a href="{% url 'product:list' %}">
+            Continue Shopping
+        </a>
+
+    </div>
+
+{% endblock %}

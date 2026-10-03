@@ -1,0 +1,368 @@
+{% extends 'base/main.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.pk }}{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    .order-info {
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+        gap: 15px;
+
+        margin-bottom: 10px;
+    }
+
+
+    .info-box {
+        padding: 15px 18px;
+
+        border: 1px solid #eee;
+
+        border-radius: 10px;
+    }
+
+
+    .info-label {
+        margin-bottom: 6px;
+
+        color: #777;
+
+        font-size: 12px;
+
+        font-weight: bold;
+
+        text-transform: uppercase;
+    }
+
+
+    .info-value {
+        color: #333;
+
+        font-size: 15px;
+
+        line-height: 1.5;
+
+        word-break: break-word;
+    }
+
+
+    /* Items */
+
+    .item-row {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 14px 0;
+
+        border-bottom: 1px solid #eee;
+    }
+
+
+    .item-name {
+        color: #333;
+
+        font-size: 16px;
+
+        font-weight: bold;
+
+        text-decoration: none;
+    }
+
+
+    a.item-name:hover {
+        color: #667eea;
+    }
+
+
+    .item-price {
+        margin-top: 5px;
+
+        color: #777;
+
+        font-size: 13px;
+    }
+
+
+    .item-total {
+        color: #667eea;
+
+        font-weight: bold;
+    }
+
+
+    .order-total {
+        display: flex;
+
+        justify-content: space-between;
+
+        margin-top: 20px;
+
+        padding: 18px 20px;
+
+        border-radius: 10px;
+
+        background: #f5f6ff;
+
+        color: #333;
+
+        font-size: 18px;
+
+        font-weight: bold;
+    }
+
+
+    .order-total span:last-child {
+        color: #667eea;
+    }
+
+
+    /* Status Badges */
+
+    .status {
+        display: inline-block;
+
+        padding: 4px 12px;
+
+        border-radius: 20px;
+
+        font-size: 12px;
+
+        font-weight: bold;
+    }
+
+
+    .status-pending {
+        background: #fff4e0;
+
+        color: #b26a00;
+    }
+
+
+    .status-processing {
+        background: #e8eeff;
+
+        color: #3b4ccb;
+    }
+
+
+    .status-shipped {
+        background: #e0f4ff;
+
+        color: #0b6a99;
+    }
+
+
+    .status-delivered {
+        background: #e6f4ea;
+
+        color: #1e7e34;
+    }
+
+
+    .status-canceled {
+        background: #ffe5e5;
+
+        color: #d93025;
+    }
+
+
+    /* Cancel Button */
+
+    .cancel-button {
+        width: 100%;
+
+        margin-top: 25px;
+
+        padding: 13px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background: #dc3545;
+
+        color: white;
+
+        font-size: 15px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+
+    .cancel-button:hover {
+        background: #c82333;
+
+        transform: translateY(-1px);
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <h2>
+        Order #{{ order.pk }}
+    </h2>
+
+
+    {% for m in messages %}
+
+        <div class="message {{ m.tags }}">
+            {{ m }}
+        </div>
+
+    {% endfor %}
+
+
+    <div class="order-info">
+
+        <div class="info-box">
+            <div class="info-label">Status</div>
+            <div class="info-value">
+                <span class="status status-{{ order.status }}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+        </div>
+
+
+        <div class="info-box">
+            <div class="info-label">Date</div>
+            <div class="info-value">
+                {{ order.created_at|date:"Y-m-d H:i" }}
+            </div>
+        </div>
+
+    </div>
+
+
+    <h3>
+        Shipping Information
+    </h3>
+
+
+    <div class="order-info">
+
+        <div class="info-box">
+            <div class="info-label">Full Name</div>
+            <div class="info-value">{{ order.full_name }}</div>
+        </div>
+
+
+        <div class="info-box">
+            <div class="info-label">Phone</div>
+            <div class="info-value">{{ order.phone }}</div>
+        </div>
+
+
+        <div class="info-box">
+            <div class="info-label">Address</div>
+            <div class="info-value">{{ order.address|linebreaksbr }}</div>
+        </div>
+
+    </div>
+
+
+    <h3>
+        Items
+    </h3>
+
+
+    {% for item in order.items.all %}
+
+        <div class="item-row">
+
+            <div>
+
+                {% if item.product %}
+
+                    <a
+                        href="{% url 'product:detail' item.product.pk %}"
+                        class="item-name"
+                    >
+                        {{ item.product_name }}
+                    </a>
+
+                {% else %}
+
+                    <span class="item-name">
+                        {{ item.product_name }}
+                    </span>
+
+                {% endif %}
+
+                <div class="item-price">
+                    {{ item.price }} x {{ item.quantity }}
+                </div>
+
+            </div>
+
+
+            <div class="item-total">
+                {{ item.total_price }}
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+
+    <div class="order-total">
+
+        <span>Total</span>
+
+        <span>{{ order.total_price }}</span>
+
+    </div>
+
+
+    {% if order.status == 'pending' %}
+
+        <form
+            method="POST"
+            action="{% url 'order:cancel' order.pk %}"
+            onsubmit="return confirm('Cancel this order?');"
+        >
+
+            {% csrf_token %}
+
+            <button type="submit" class="cancel-button">
+                Cancel Order
+            </button>
+
+        </form>
+
+    {% endif %}
+
+
+    <div class="profile-links">
+
+        <a href="{% url 'order:list' %}">
+            All Orders
+        </a>
+
+
+        <a href="{% url 'product:list' %}">
+            Continue Shopping
+        </a>
+
+    </div>
+
+{% endblock %}
