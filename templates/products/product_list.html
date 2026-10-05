@@ -1,70 +1,41 @@
+{% extends 'base/main.html' %}
 {% load static %}
 
-<!DOCTYPE html>
+{% block title %}Products{% endblock %}
 
-<html lang="en">
 
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>Products</title>
-
+{% block content %}
 
 <style>
 
-    * {
-        margin: 0;
-        padding: 0;
+    /* Everything is scoped to .shop-page, so it works with any base template */
+
+    .shop-page {
+        width: 100%;
+        max-width: 1100px;
+
+        margin: 0 auto;
+
+        padding: 30px 15px;
+
+        font-family: Arial, sans-serif;
+    }
+
+
+    .shop-page * {
         box-sizing: border-box;
     }
 
 
-    body {
-        font-family: Arial, sans-serif;
-
-        background: linear-gradient(
-            135deg,
-            #667eea,
-            #764ba2
-        );
-
-        min-height: 100vh;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        padding: 30px 20px;
+    .shop-page a {
+        text-decoration: none;
     }
 
 
-    /* Main Container */
+    .shop-page h2 {
+        margin: 0 0 30px;
 
-    .profile-container {
-        width: 100%;
-        max-width: 700px;
-
-        background: #ffffff;
-
-        padding: 40px;
-
-        border-radius: 15px;
-
-        box-shadow:
-            0 15px 35px rgba(0, 0, 0, 0.2);
-    }
-
-
-    .profile-container h2 {
         text-align: center;
-
-        margin-bottom: 30px;
 
         color: #333;
 
@@ -72,12 +43,59 @@
     }
 
 
+    /* Breadcrumb */
+
+    .shop-breadcrumb {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        align-items: center;
+
+        gap: 8px;
+
+        margin-bottom: 25px;
+
+        padding: 12px 18px;
+
+        border-radius: 8px;
+
+        background: #f4f5ff;
+
+        font-size: 14px;
+    }
+
+
+    .shop-breadcrumb a {
+        color: #333;
+
+        font-weight: bold;
+    }
+
+
+    .shop-breadcrumb a:hover {
+        color: #667eea;
+    }
+
+
+    .shop-breadcrumb .separator {
+        color: #aaa;
+    }
+
+
+    .shop-breadcrumb .current {
+        color: #667eea;
+
+        font-weight: bold;
+    }
+
+
     /* Flash Messages */
 
-    .message {
-        padding: 10px 14px;
-
+    .shop-message {
         margin-bottom: 18px;
+
+        padding: 10px 14px;
 
         border-radius: 8px;
 
@@ -85,14 +103,14 @@
     }
 
 
-    .message.success {
+    .shop-message.success {
         background: #e6f4ea;
 
         color: #1e7e34;
     }
 
 
-    .message.error {
+    .shop-message.error {
         background: #ffe5e5;
 
         color: #d93025;
@@ -101,37 +119,29 @@
 
     /* Product Grid */
 
-    .product-list {
+    .shop-grid {
         display: grid;
 
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 
-        gap: 18px;
+        gap: 22px;
     }
 
 
-    .product-card {
-        display: flex;
-
-        flex-direction: column;
-
-        justify-content: space-between;
-
-        gap: 15px;
-
-        padding: 20px;
+    .product-item {
+        overflow: hidden;
 
         border: 1px solid #eee;
 
         border-radius: 12px;
 
-        color: #333;
+        background: #f8f9ff;
 
         transition: 0.3s;
     }
 
 
-    .product-card:hover {
+    .product-item:hover {
         border-color: #667eea;
 
         box-shadow:
@@ -141,21 +151,144 @@
     }
 
 
-    .product-link {
+    /* Product Image */
+
+    .product-img {
+        position: relative;
+
+        height: 230px;
+
+        overflow: hidden;
+
+        background: linear-gradient(
+            135deg,
+            #c9d1ff,
+            #e3d2f1
+        );
+    }
+
+
+    .product-img img {
         display: block;
 
-        text-decoration: none;
+        width: 100%;
+        height: 100%;
 
-        color: inherit;
+        object-fit: cover;
+
+        transition: 0.4s;
+    }
+
+
+    .product-item:hover .product-img img {
+        transform: scale(1.08);
+    }
+
+
+    /* Hover Action Buttons */
+
+    .product-action {
+        position: absolute;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        gap: 8px;
+
+        background: rgba(255, 255, 255, 0.7);
+
+        opacity: 0;
+
+        transition: 0.4s;
+    }
+
+
+    .product-item:hover .product-action {
+        opacity: 1;
+    }
+
+
+    .product-action form {
+        display: flex;
+
+        margin: 0;
+    }
+
+
+    .action-btn {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        width: 50px;
+        height: 50px;
+
+        padding: 0;
+
+        border: 1px solid #333;
+
+        border-radius: 0;
+
+        background: transparent;
+
+        color: #333;
+
+        font-size: 18px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+
+    .action-btn:hover {
+        border-color: #667eea;
+
+        background: #667eea;
+
+        color: #ffffff;
+    }
+
+
+    /* Product Info */
+
+    .product-body {
+        padding: 18px 15px;
+
+        text-align: center;
     }
 
 
     .product-name {
-        margin-bottom: 10px;
+        display: block;
 
-        font-size: 17px;
+        margin-bottom: 8px;
+
+        overflow: hidden;
+
+        color: #333;
+
+        font-size: 16px;
 
         font-weight: bold;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+
+    .product-name:hover {
+        color: #667eea;
     }
 
 
@@ -164,24 +297,33 @@
 
         color: #667eea;
 
+        font-size: 18px;
+
         font-weight: bold;
     }
 
 
-    .rating-line {
+    .product-stars {
         color: #777;
 
-        font-size: 14px;
+        font-size: 13px;
     }
 
 
-    .rating-line .star {
+    .product-stars .star {
+        color: #ddd;
+
+        font-size: 15px;
+    }
+
+
+    .product-stars .star.filled {
         color: #f5a623;
     }
 
 
-    .empty-state {
-        padding: 30px 0;
+    .shop-empty {
+        padding: 40px 0;
 
         text-align: center;
 
@@ -189,75 +331,34 @@
     }
 
 
-    /* Add To Cart Button */
+    /* Pagination */
 
-    .add-button {
-        display: block;
-
-        width: 100%;
-
-        padding: 11px;
-
-        border: none;
-
-        border-radius: 8px;
-
-        background: #667eea;
-
-        color: white;
-
-        text-decoration: none;
-
-        text-align: center;
-
-        font-size: 14px;
-
-        font-weight: bold;
-
-        cursor: pointer;
-
-        transition: 0.3s;
-    }
-
-
-    .add-button:hover {
-        background: #5568d8;
-
-        transform: translateY(-1px);
-    }
-
-
-    /* Links Section */
-
-    .profile-links {
+    .shop-pagination {
         display: flex;
 
         flex-wrap: wrap;
 
-        gap: 10px;
+        justify-content: center;
 
-        margin-top: 30px;
+        gap: 8px;
 
-        padding-top: 25px;
-
-        border-top: 1px solid #eee;
+        margin-top: 35px;
     }
 
 
-    .profile-links a {
-        flex: 1;
+    .shop-pagination a,
+    .shop-pagination span {
+        min-width: 40px;
 
-        min-width: 140px;
+        padding: 10px 14px;
 
-        padding: 11px 15px;
+        border: 1px solid #ddd;
 
         border-radius: 8px;
 
-        background: #667eea;
+        background: #ffffff;
 
-        color: white;
-
-        text-decoration: none;
+        color: #555;
 
         text-align: center;
 
@@ -269,59 +370,46 @@
     }
 
 
-    .profile-links a:hover {
-        background: #5568d8;
+    .shop-pagination a:hover {
+        border-color: #667eea;
 
-        transform: translateY(-1px);
+        color: #667eea;
     }
 
 
-    .profile-links .cart-link {
-        background: #764ba2;
+    .shop-pagination .active {
+        border-color: #667eea;
+
+        background: #667eea;
+
+        color: #ffffff;
     }
 
 
-    .profile-links .cart-link:hover {
-        background: #653d8b;
+    .shop-pagination .disabled {
+        background: #f7f7f7;
+
+        color: #bbb;
     }
 
 
-    .profile-links .logout-link {
-        background: #dc3545;
+    /* Touch screens have no hover: always show the buttons */
+
+    @media (hover: none) {
+
+        .product-action {
+            opacity: 1;
+
+            transform: translateY(0);
+        }
+
     }
 
-
-    .profile-links .logout-link:hover {
-        background: #c82333;
-    }
-
-
-    /* Mobile */
 
     @media (max-width: 600px) {
 
-        body {
-            padding: 20px 15px;
-        }
-
-
-        .profile-container {
-            padding: 30px 25px;
-        }
-
-
-        .profile-container h2 {
+        .shop-page h2 {
             font-size: 26px;
-        }
-
-
-        .profile-links {
-            flex-direction: column;
-        }
-
-
-        .profile-links a {
-            width: 100%;
         }
 
     }
@@ -329,12 +417,21 @@
 </style>
 
 
-</head>
-
-<body>
+<div class="shop-page">
 
 
-<div class="profile-container">
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="{% url 'website:index' %}">Home</a>
+                    <a class="breadcrumb-item text-dark" href="{% url "product:list" %}">Products</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
 
     <h2>
         Products
@@ -343,7 +440,7 @@
 
     {% for m in messages %}
 
-        <div class="message {{ m.tags }}">
+        <div class="shop-message {{ m.tags }}">
             {{ m }}
         </div>
 
@@ -352,117 +449,184 @@
 
     {% if products %}
 
-        <div class="product-list">
+        <!-- Shop Products -->
+
+        <div class="shop-grid">
 
             {% for p in products %}
 
-                <div class="product-card">
+                {% cycle '1' '2' '3' '4' '5' '6' '7' '8' as img_num silent %}
 
-                    <a
-                        href="{% url 'product:detail' p.pk %}"
-                        class="product-link"
-                    >
+                {% with img_path='img/product-'|add:img_num|add:'.jpg' %}
 
-                        <div class="product-name">
-                            {{ p.name }}
-                        </div>
+                    <div class="product-item">
 
-                        <div class="product-price">
-                            {{ p.price }}
-                        </div>
+                        <div class="product-img">
 
-                        <div class="rating-line">
-                            <span class="star">&#9733;</span>
-                            {{ p.average_rating|floatformat:1 }}
-                            ({{ p.rating_count }})
-                        </div>
-
-                    </a>
-
-
-                    {% if user.is_authenticated %}
-
-                        <form
-                            method="POST"
-                            action="{% url 'cart:add' p.pk %}"
-                        >
-
-                            {% csrf_token %}
-
-                            <input type="hidden" name="quantity" value="1">
-
-                            <input
-                                type="hidden"
-                                name="next"
-                                value="{{ request.get_full_path }}"
+                            <img
+                                src="{% static img_path %}"
+                                alt="{{ p.name }}"
+                                loading="lazy"
                             >
 
-                            <button
-                                type="submit"
-                                class="add-button"
+
+                            <div class="product-action">
+
+                                {% if user.is_authenticated %}
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'cart:add' p.pk %}"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <input type="hidden" name="quantity" value="1">
+
+                                        <input
+                                            type="hidden"
+                                            name="next"
+                                            value="{{ request.get_full_path }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="action-btn"
+                                            title="Add to cart"
+                                        >
+                                            &#128722;
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <a
+                                        href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"
+                                        class="action-btn"
+                                        title="Login to add to cart"
+                                    >
+                                        &#128722;
+                                    </a>
+
+                                {% endif %}
+
+
+                                <a
+                                    href="{% url 'product:detail' p.pk %}"
+                                    class="action-btn"
+                                    title="View details"
+                                >
+                                    &#128269;
+                                </a>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="product-body">
+
+                            <a
+                                href="{% url 'product:detail' p.pk %}"
+                                class="product-name"
+                                title="{{ p.name }}"
                             >
-                                Add to Cart
-                            </button>
+                                {{ p.name }}
+                            </a>
 
-                        </form>
 
-                    {% else %}
+                            <div class="product-price">
+                                ${{ p.price }}
+                            </div>
 
-                        <a
-                            href="{% url 'accounts:login' %}?next={{ request.path }}"
-                            class="add-button"
-                        >
-                            Login to Add
-                        </a>
 
-                    {% endif %}
+                            <div class="product-stars">
 
-                </div>
+                                {% with rounded=p.average_rating|floatformat:"0"|add:0 %}
+
+                                    {% for i in "12345" %}
+
+                                        <span class="star{% if forloop.counter <= rounded %} filled{% endif %}">&#9733;</span>
+
+                                    {% endfor %}
+
+                                {% endwith %}
+
+                                ({{ p.rating_count }})
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endwith %}
 
             {% endfor %}
 
         </div>
 
+
+        <!-- Pagination -->
+
+        {% if products.has_other_pages %}
+
+            <nav class="shop-pagination">
+
+                {% if products.has_previous %}
+
+                    <a href="?page={{ products.previous_page_number }}">
+                        Previous
+                    </a>
+
+                {% else %}
+
+                    <span class="disabled">Previous</span>
+
+                {% endif %}
+
+
+                {% for num in products.paginator.page_range %}
+
+                    {% if num == products.number %}
+
+                        <span class="active">{{ num }}</span>
+
+                    {% else %}
+
+                        <a href="?page={{ num }}">{{ num }}</a>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if products.has_next %}
+
+                    <a href="?page={{ products.next_page_number }}">
+                        Next
+                    </a>
+
+                {% else %}
+
+                    <span class="disabled">Next</span>
+
+                {% endif %}
+
+            </nav>
+
+        {% endif %}
+
     {% else %}
 
-        <p class="empty-state">
+        <p class="shop-empty">
             No products yet.
         </p>
 
     {% endif %}
 
 
-    <div class="profile-links">
-
-        <a href="{% url 'website:index' %}">
-            Back to Home
-        </a>
-
-
-        {% if user.is_authenticated %}
-
-            <a href="{% url 'cart:detail' %}" class="cart-link">
-                Cart {{ cart_count }}
-            </a>
-
-
-            <a href="{% url 'accounts:logout' %}" class="logout-link">
-                Logout
-            </a>
-
-        {% else %}
-
-            <a href="{% url 'accounts:login' %}">
-                Login
-            </a>
-
-        {% endif %}
-
-    </div>
-
 </div>
 
-
-</body>
-
-</html>
+{% endblock %}

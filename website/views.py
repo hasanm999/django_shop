@@ -14,11 +14,11 @@ def contact(request):
     return render(request, 'contact.html')
 
 
-def detail(request):
-    return render(request, 'detail.html')
+# def detail(request):
+#     return render(request, 'detail.html')
 
-def shop(request):
-    return render(request, 'shop_list.html')
+# def shop(request):
+#     return render(request, 'shop_list.html')
 
 def cart(request):
     return render(request, 'cart.html')

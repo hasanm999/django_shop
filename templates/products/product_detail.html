@@ -1,578 +1,592 @@
+{% extends 'base/main.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>{{ product.name }}</title>
-
-
-<style>
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-
-    body {
-        font-family: Arial, sans-serif;
-
-        background: linear-gradient(
-            135deg,
-            #667eea,
-            #764ba2
-        );
-
-        min-height: 100vh;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        padding: 30px 20px;
-    }
-
-
-    /* Main Container */
-
-    .profile-container {
-        width: 100%;
-        max-width: 700px;
-
-        background: #ffffff;
-
-        padding: 40px;
-
-        border-radius: 15px;
-
-        box-shadow:
-            0 15px 35px rgba(0, 0, 0, 0.2);
-    }
-
-
-    .profile-container h2 {
-        text-align: center;
-
-        margin-bottom: 30px;
-
-        color: #333;
-
-        font-size: 30px;
-    }
-
-
-    .profile-container h3 {
-        margin-top: 25px;
-        margin-bottom: 18px;
-
-        padding-bottom: 10px;
-
-        border-bottom: 1px solid #eee;
-
-        color: #444;
-
-        font-size: 19px;
-    }
-
-
-    /* Product Info */
-
-    .detail-price {
-        margin-bottom: 12px;
-
-        color: #667eea;
-
-        font-size: 22px;
-
-        font-weight: bold;
-    }
-
-
-    .detail-rating {
-        color: #555;
-
-        font-size: 16px;
-    }
-
-
-    .detail-rating .star {
-        color: #f5a623;
-
-        font-size: 20px;
-    }
-
-
-    /* Add To Cart */
-
-    .cart-form {
-        display: flex;
-
-        align-items: center;
-
-        gap: 10px;
-
-        margin-top: 20px;
-    }
-
-
-    .quantity-input {
-        width: 80px;
-
-        padding: 13px 10px;
-
-        border: 1px solid #ddd;
-
-        border-radius: 8px;
-
-        font-size: 15px;
-
-        text-align: center;
-
-        outline: none;
-
-        transition: 0.3s;
-    }
-
-
-    .quantity-input:focus {
-        border-color: #667eea;
-
-        box-shadow:
-            0 0 0 3px
-            rgba(102, 126, 234, 0.15);
-    }
-
-
-    .cart-form .save-button {
-        flex: 1;
-
-        margin-top: 0;
-    }
-
-
-    .login-note {
-        margin-top: 20px;
-
-        color: #777;
-
-        font-size: 14px;
-    }
-
-
-    /* Star Rating Input */
-
-    .form-label {
-        display: block;
-
-        margin-bottom: 12px;
-
-        color: #444;
-
-        font-size: 14px;
-
-        font-weight: bold;
-    }
-
-
-    .star-rating {
-        display: flex;
-
-        flex-direction: row-reverse;
-
-        justify-content: center;
-
-        gap: 6px;
-
-        margin-bottom: 18px;
-    }
-
-
-    .star-rating input {
-        position: absolute;
-
-        opacity: 0;
-
-        pointer-events: none;
-    }
-
-
-    .star-rating label {
-        color: #ddd;
-
-        font-size: 44px;
-
-        line-height: 1;
-
-        cursor: pointer;
-
-        transition: 0.2s;
-    }
-
-
-    /* Fill hovered star and every star before it */
-
-    .star-rating label:hover,
-    .star-rating label:hover ~ label {
-        color: #f5a623;
-    }
-
-
-    /* Fill selected star and every star before it */
-
-    .star-rating input:checked ~ label {
-        color: #f5a623;
-    }
-
-
-    .star-rating input:focus-visible + label {
-        outline: 2px solid #667eea;
-
-        border-radius: 4px;
-    }
-
-
-    /* Error Messages */
-
-    .profile-container .errorlist {
-        list-style: none;
-
-        color: #d93025;
-
-        background: #ffe5e5;
-
-        padding: 8px 10px;
-
-        margin-bottom: 8px;
-
-        border-radius: 6px;
-
-        font-size: 13px;
-    }
-
-
-    /* Flash Messages */
-
-    .message {
-        padding: 10px 14px;
-
-        margin-bottom: 18px;
-
-        border-radius: 8px;
-
-        font-size: 14px;
-    }
-
-
-    .message.success {
-        background: #e6f4ea;
-
-        color: #1e7e34;
-    }
-
-
-    .message.error {
-        background: #ffe5e5;
-
-        color: #d93025;
-    }
-
-
-    /* Save Button */
-
-    .save-button {
-        width: 100%;
-
-        padding: 13px;
-
-        margin-top: 5px;
-
-        border: none;
-
-        border-radius: 8px;
-
-        background: #667eea;
-
-        color: white;
-
-        font-size: 16px;
-
-        font-weight: bold;
-
-        cursor: pointer;
-
-        transition: 0.3s;
-    }
-
-
-    .save-button:hover {
-        background: #5568d8;
-
-        transform: translateY(-1px);
-    }
-
-
-    /* Links Section */
-
-    .profile-links {
-        display: flex;
-
-        flex-wrap: wrap;
-
-        gap: 10px;
-
-        margin-top: 30px;
-
-        padding-top: 25px;
-
-        border-top: 1px solid #eee;
-    }
-
-
-    .profile-links a {
-        flex: 1;
-
-        min-width: 140px;
-
-        padding: 11px 15px;
-
-        border-radius: 8px;
-
-        background: #667eea;
-
-        color: white;
-
-        text-decoration: none;
-
-        text-align: center;
-
-        font-size: 14px;
-
-        font-weight: bold;
-
-        transition: 0.3s;
-    }
-
-
-    .profile-links a:hover {
-        background: #5568d8;
-
-        transform: translateY(-1px);
-    }
-
-
-    .profile-links .cart-link {
-        background: #764ba2;
-    }
-
-
-    .profile-links .cart-link:hover {
-        background: #653d8b;
-    }
-
-
-    /* Mobile */
-
-    @media (max-width: 600px) {
-
-        body {
-            padding: 20px 15px;
-        }
-
-
-        .profile-container {
-            padding: 30px 25px;
-        }
-
-
-        .profile-container h2 {
-            font-size: 26px;
-        }
-
-
-        .star-rating label {
-            font-size: 38px;
-        }
-
-
-        .profile-links {
-            flex-direction: column;
-        }
-
-
-        .profile-links a {
-            width: 100%;
-        }
-
-    }
-
-</style>
-
-
-</head>
-
-<body>
-
-
-<div class="profile-container">
-
-    <h2>
-        {{ product.name }}
-    </h2>
-
-
-    {% for m in messages %}
-
-        <div class="message {{ m.tags }}">
-            {{ m }}
+{% block content %}
+
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+
+                <a
+                    class="breadcrumb-item text-dark"
+                    href="{% url 'website:index' %}"
+                >
+                    Home
+                </a>
+
+                <a
+                    class="breadcrumb-item text-dark"
+                    href="{% url 'product:detail' pk=product.pk %}"
+                >
+                    {{ product.name }}
+                </a>
+
+            </nav>
         </div>
-
-    {% endfor %}
-
-
-    <div class="detail-price">
-        {{ product.price }}
     </div>
+</div>
+<!-- Breadcrumb End -->
 
 
-    <div class="detail-rating">
-        <span class="star">&#9733;</span>
-        {{ product.average_rating|floatformat:1 }} / 5
-        ({{ product.rating_count }} vote{{ product.rating_count|pluralize }})
-    </div>
+<!-- Shop Detail Start -->
+<div class="container-fluid pb-5">
 
+    <div class="row px-xl-5">
 
-    {% if user.is_authenticated %}
+        <!-- Product Image -->
+        <div class="col-lg-5 mb-30">
 
-        <form
-            method="POST"
-            action="{% url 'cart:add' product.pk %}"
-            class="cart-form"
-        >
-
-            {% csrf_token %}
-
-            <input
-                type="number"
-                name="quantity"
-                value="1"
-                min="1"
-                class="quantity-input"
-                aria-label="Quantity"
+            <div
+                id="product-carousel"
+                class="carousel slide"
+                data-ride="carousel"
             >
 
-            <input
-                type="hidden"
-                name="next"
-                value="{{ request.get_full_path }}"
-            >
+                <div class="carousel-inner bg-light">
 
-            <button
-                type="submit"
-                class="save-button"
-            >
-                Add to Cart
-            </button>
+                    <div class="carousel-item active">
 
-        </form>
+                        {% if product.image %}
 
-    {% else %}
+                            <img
+                                class="w-100 h-100"
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                            >
 
-        <p class="login-note">
-            Log in to add this product to your cart.
-        </p>
+                        {% else %}
 
-    {% endif %}
+                            <img
+                                class="w-100 h-100"
+                                src="{% static 'img/product-1.jpg' %}"
+                                alt="No Image"
+                            >
 
+                        {% endif %}
 
-    <h3>
-        Rate this product
-    </h3>
+                    </div>
 
+                </div>
 
-    {% if form %}
+                <a
+                    class="carousel-control-prev"
+                    href="#product-carousel"
+                    data-slide="prev"
+                >
+                    <i class="fa fa-2x fa-angle-left text-dark"></i>
+                </a>
 
-        <form
-            method="POST"
-            action="{% url 'product:rate' product.pk %}"
-        >
-
-            {% csrf_token %}
-
-            {{ form.score.errors }}
-
-            <span class="form-label">
-                {{ form.score.label }}
-            </span>
-
-            <div class="star-rating">
-
-                {% for radio in form.score reversed %}
-
-                    {{ radio.tag }}
-
-                    <label for="{{ radio.id_for_label }}" title="{{ radio.choice_label }}">
-                        &#9733;
-                    </label>
-
-                {% endfor %}
+                <a
+                    class="carousel-control-next"
+                    href="#product-carousel"
+                    data-slide="next"
+                >
+                    <i class="fa fa-2x fa-angle-right text-dark"></i>
+                </a>
 
             </div>
 
-            <button
-                type="submit"
-                class="save-button"
-            >
-                Submit Rating
-            </button>
-
-        </form>
-
-    {% else %}
-
-        <p>
-            You need to log in to rate this product.
-        </p>
-
-    {% endif %}
+        </div>
+        <!-- Product Image End -->
 
 
-    <div class="profile-links">
+        <!-- Product Information -->
+        <div class="col-lg-7 h-auto mb-30">
 
-        <a href="{% url 'product:list' %}">
-            Back to Products
-        </a>
+            <div class="h-100 bg-light p-30">
+
+                <h3>{{ product.name }}</h3>
 
 
-        {% if user.is_authenticated %}
+                <!-- Average Rating -->
+                <div class="d-flex align-items-center mb-3">
 
-            <a href="{% url 'cart:detail' %}" class="cart-link">
-                Cart ({{ cart_count }})
-            </a>
+                    {% if product.average_rating %}
 
-        {% else %}
+                        <div class="product-rating">
 
-            <a href="{% url 'accounts:login' %}?next={{ request.path }}">
-                Login
-            </a>
+                            {% if product.average_rating >= 1 %}
+                                <span class="star filled">★</span>
+                            {% else %}
+                                <span class="star">★</span>
+                            {% endif %}
 
-        {% endif %}
+                            {% if product.average_rating >= 2 %}
+                                <span class="star filled">★</span>
+                            {% else %}
+                                <span class="star">★</span>
+                            {% endif %}
+
+                            {% if product.average_rating >= 3 %}
+                                <span class="star filled">★</span>
+                            {% else %}
+                                <span class="star">★</span>
+                            {% endif %}
+
+                            {% if product.average_rating >= 4 %}
+                                <span class="star filled">★</span>
+                            {% else %}
+                                <span class="star">★</span>
+                            {% endif %}
+
+                            {% if product.average_rating >= 5 %}
+                                <span class="star filled">★</span>
+                            {% else %}
+                                <span class="star">★</span>
+                            {% endif %}
+
+                        </div>
+
+                        <span class="rating-number">
+                            {{ product.average_rating }} / 5
+                        </span>
+
+                    {% else %}
+
+                        <span class="no-rating">
+                            No ratings yet
+                        </span>
+
+                    {% endif %}
+
+                </div>
+                <!-- Average Rating End -->
+
+
+                <!-- Price -->
+                <h3 class="font-weight-semi-bold mb-4">
+                    ${{ product.price }}
+                </h3>
+
+
+                <!-- Description -->
+                <p class="mb-4">
+                    {{ product.description }}
+                </p>
+
+
+                <!-- Quantity & Cart -->
+                <div class="d-flex align-items-center mb-4 pt-2">
+
+                    <div
+                        class="input-group quantity mr-3"
+                        style="width: 130px;"
+                    >
+
+                        <div class="input-group-btn">
+
+                            <button class="btn btn-primary btn-minus">
+                                <i class="fa fa-minus"></i>
+                            </button>
+
+                        </div>
+
+                        <input
+                            type="text"
+                            class="form-control bg-secondary border-0 text-center"
+                            value="1"
+                        >
+
+                        <div class="input-group-btn">
+
+                            <button class="btn btn-primary btn-plus">
+                                <i class="fa fa-plus"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-primary px-3">
+
+                        <i class="fa fa-shopping-cart mr-1"></i>
+
+                        Add To Cart
+
+                    </button>
+
+                </div>
+                <!-- Quantity & Cart End -->
+
+
+                <!-- Share -->
+                <div class="d-flex pt-2">
+
+                    <strong class="text-dark mr-2">
+                        Share on:
+                    </strong>
+
+                    <div class="d-inline-flex">
+
+                        <a
+                            class="text-dark px-2"
+                            href=""
+                        >
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+
+                        <a
+                            class="text-dark px-2"
+                            href=""
+                        >
+                            <i class="fab fa-twitter"></i>
+                        </a>
+
+                        <a
+                            class="text-dark px-2"
+                            href=""
+                        >
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+
+                        <a
+                            class="text-dark px-2"
+                            href=""
+                        >
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+                <!-- Share End -->
+
+            </div>
+
+        </div>
+        <!-- Product Information End -->
+
+    </div>
+
+
+    <!-- Description & Rating -->
+    <div class="row px-xl-5">
+
+        <div class="col">
+
+            <div class="bg-light p-30">
+
+                <!-- Tabs -->
+                <div class="nav nav-tabs mb-4">
+
+                    <a
+                        class="nav-item nav-link text-dark active"
+                        data-toggle="tab"
+                        href="#tab-pane-1"
+                    >
+                        Description
+                    </a>
+
+                    <a
+                        class="nav-item nav-link text-dark"
+                        data-toggle="tab"
+                        href="#tab-pane-2"
+                    >
+                        Rating
+                    </a>
+
+                </div>
+                <!-- Tabs End -->
+
+
+                <div class="tab-content">
+
+                    <!-- Description Tab -->
+                    <div
+                        class="tab-pane fade show active"
+                        id="tab-pane-1"
+                    >
+
+                        <h4 class="mb-3">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            Assumenda consequatur delectus laboriosam odio odit quam
+                            repudiandae vel! Fugit ipsam, ipsum? Amet, dicta dolore
+                            doloremque doloribus error ipsa labore, laboriosam libero
+                            minima mollitia nobis qui reiciendis repellat repellendus
+                            sequi, similique vel voluptatem voluptates. Adipisci aliquam
+                            commodi doloribus ex, facere harum provident quos voluptas!
+                            Aperiam deleniti harum iure nemo voluptates? Commodi corporis
+                            dicta fuga inventore iste neque non provident ratione rem
+                            voluptatem! Beatae doloremque hic laboriosam libero maiores
+                            necessitatibus, nemo obcaecati, pariatur porro quis repudiandae
+                            similique sit ut. Commodi doloribus eligendi expedita, fugit
+                            incidunt ipsum itaque labore necessitatibus nihil odio officia
+                            omnis possimus quae quam, quas, quasi reiciendis!
+                        </h4>
+
+                        <p>
+                            {{ product.description }}
+                        </p>
+
+                    </div>
+                    <!-- Description Tab End -->
+
+
+                    <!-- Rating Tab -->
+                    <div
+                        class="tab-pane fade"
+                        id="tab-pane-2"
+                    >
+
+                        <h4 class="mb-3">
+                            Rate this product
+                        </h4>
+
+
+                        {% if request.user.is_authenticated %}
+
+                            {% if form %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'product:rate' product.pk %}"
+                                >
+
+                                    {% csrf_token %}
+
+
+                                    <!-- Star Rating -->
+                                    <div class="rating-stars">
+
+                                        <input
+                                            type="radio"
+                                            name="score"
+                                            value="1"
+                                            id="star1"
+                                            {% if form.instance.score == 1 %}
+                                                checked
+                                            {% endif %}
+                                        >
+
+                                        <label for="star1">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            name="score"
+                                            value="2"
+                                            id="star2"
+                                            {% if form.instance.score == 2 %}
+                                                checked
+                                            {% endif %}
+                                        >
+
+                                        <label for="star2">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            name="score"
+                                            value="3"
+                                            id="star3"
+                                            {% if form.instance.score == 3 %}
+                                                checked
+                                            {% endif %}
+                                        >
+
+                                        <label for="star3">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            name="score"
+                                            value="4"
+                                            id="star4"
+                                            {% if form.instance.score == 4 %}
+                                                checked
+                                            {% endif %}
+                                        >
+
+                                        <label for="star4">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            name="score"
+                                            value="5"
+                                            id="star5"
+                                            {% if form.instance.score == 5 %}
+                                                checked
+                                            {% endif %}
+                                        >
+
+                                        <label for="star5">
+                                            ★
+                                        </label>
+
+                                    </div>
+                                    <!-- Star Rating End -->
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary px-3 mt-3"
+                                    >
+                                        Submit Rating
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            <p>
+
+                                <a href="{% url 'account_login' %}">
+                                    Log in
+                                </a>
+
+                                to rate this product.
+
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+                    <!-- Rating Tab End -->
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+<!-- Shop Detail End -->
 
 
-</body>
+<!-- Star Rating CSS -->
+<style>
 
-</html>
+    .product-rating {
+        display: flex;
+        align-items: center;
+    }
+
+    .product-rating .star {
+        font-size: 25px;
+        color: #ccc;
+        margin-right: 2px;
+    }
+
+    .product-rating .star.filled {
+        color: #ffc107;
+    }
+
+    .rating-number {
+        color: #666;
+        font-size: 14px;
+        margin-left: 8px;
+    }
+
+    .no-rating {
+        color: #777;
+    }
+
+
+    .rating-stars {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: fit-content;
+    }
+
+    .rating-stars input {
+        display: none;
+    }
+
+    .rating-stars label {
+        font-size: 38px;
+        color: #ccc;
+        cursor: pointer;
+        margin-right: 3px;
+        transition: color 0.2s;
+    }
+
+    .rating-stars label:hover {
+        color: #ffc107;
+    }
+
+    .rating-stars label.active {
+        color: #ffc107;
+    }
+
+</style>
+<!-- Star Rating CSS End -->
+
+
+<!-- Star Rating JavaScript -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const stars = document.querySelectorAll(".rating-stars label");
+
+        stars.forEach(function (star, index) {
+
+            star.addEventListener("click", function () {
+
+                stars.forEach(function (item, itemIndex) {
+
+                    if (itemIndex <= index) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+
+                });
+
+            });
+
+        });
+
+        const checkedInput = document.querySelector(
+            '.rating-stars input:checked'
+        );
+
+        if (checkedInput) {
+
+            const checkedLabel = document.querySelector(
+                'label[for="' + checkedInput.id + '"]'
+            );
+
+            if (checkedLabel) {
+
+                const checkedIndex = Array.from(stars).indexOf(
+                    checkedLabel
+                );
+
+                stars.forEach(function (item, itemIndex) {
+
+                    if (itemIndex <= checkedIndex) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+
+                });
+
+            }
+
+        }
+
+    });
+
+</script>
+<!-- Star Rating JavaScript End -->
+
+
+{% endblock %}
