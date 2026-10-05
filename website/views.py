@@ -1,13 +1,21 @@
 from django.shortcuts import render
-
+from product.models import Product
 
 # Create your views here.
+
+
+
 def index(request):
-    return render(request, 'index.html')
+    recent_products = Product.objects.order_by('-id')[:10]
 
+    context = {
+        'recent_products': recent_products,
+    }
 
-def checkout(request):
-    return render(request, 'checkout.html')
+    return render(request, 'index.html', context)
+
+# def checkout(request):
+#     return render(request, 'checkout.html')
 
 
 def contact(request):

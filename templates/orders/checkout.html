@@ -1,253 +1,303 @@
 {% extends 'base/main.html' %}
 {% load static %}
 
-{% block title %}Checkout{% endblock %}
-
-
-{% block extra_css %}
-
-<style>
-
-    /* Order Summary */
-
-    .summary-row {
-        display: flex;
-
-        justify-content: space-between;
-
-        gap: 15px;
-
-        padding: 12px 0;
-
-        border-bottom: 1px solid #eee;
-
-        color: #555;
-
-        font-size: 14px;
-    }
-
-
-    .summary-total {
-        display: flex;
-
-        justify-content: space-between;
-
-        margin: 20px 0 10px;
-
-        padding: 18px 20px;
-
-        border-radius: 10px;
-
-        background: #f5f6ff;
-
-        color: #333;
-
-        font-size: 18px;
-
-        font-weight: bold;
-    }
-
-
-    .summary-total span:last-child {
-        color: #667eea;
-    }
-
-
-    /* Django Form */
-
-    .profile-container form p {
-        margin-bottom: 18px;
-    }
-
-
-    .profile-container label {
-        display: block;
-
-        margin-bottom: 7px;
-
-        color: #444;
-
-        font-size: 14px;
-
-        font-weight: bold;
-    }
-
-
-    .profile-container input,
-    .profile-container textarea {
-        width: 100%;
-
-        padding: 13px 15px;
-
-        border: 1px solid #ddd;
-
-        border-radius: 8px;
-
-        font-family: Arial, sans-serif;
-
-        font-size: 15px;
-
-        outline: none;
-
-        transition: 0.3s;
-    }
-
-
-    .profile-container textarea {
-        min-height: 100px;
-
-        resize: vertical;
-    }
-
-
-    .profile-container input:focus,
-    .profile-container textarea:focus {
-        border-color: #667eea;
-
-        box-shadow:
-            0 0 0 3px
-            rgba(102, 126, 234, 0.15);
-    }
-
-
-    .profile-container .helptext {
-        display: block;
-
-        margin-top: 6px;
-
-        color: #777;
-
-        font-size: 12px;
-    }
-
-
-    .profile-container .errorlist {
-        list-style: none;
-
-        color: #d93025;
-
-        background: #ffe5e5;
-
-        padding: 8px 10px;
-
-        margin-bottom: 8px;
-
-        border-radius: 6px;
-
-        font-size: 13px;
-    }
-
-
-    .save-button {
-        width: 100%;
-
-        padding: 13px;
-
-        margin-top: 5px;
-
-        border: none;
-
-        border-radius: 8px;
-
-        background: #667eea;
-
-        color: white;
-
-        font-size: 16px;
-
-        font-weight: bold;
-
-        cursor: pointer;
-
-        transition: 0.3s;
-    }
-
-
-    .save-button:hover {
-        background: #5568d8;
-
-        transform: translateY(-1px);
-    }
-
-</style>
-
+{% block title %}
+    Checkout
 {% endblock %}
 
 
 {% block content %}
 
-    <h2>
-        Checkout
-    </h2>
 
+<!-- Breadcrumb Start -->
 
-    {% for m in messages %}
+<div class="container-fluid">
 
-        <div class="message {{ m.tags }}">
-            {{ m }}
-        </div>
+    <div class="row px-xl-5">
 
-    {% endfor %}
+        <div class="col-12">
 
+            <nav class="breadcrumb bg-light mb-30">
 
-    <h3>
-        Order Summary
-    </h3>
+                <a
+                    class="breadcrumb-item text-dark"
+                    href="{% url 'website:index' %}"
+                >
+                    Home
+                </a>
 
+                <span class="breadcrumb-item active">
+                    Checkout
+                </span>
 
-    {% for item in items %}
-
-        <div class="summary-row">
-
-            <span>
-                {{ item.product.name }} x {{ item.quantity }}
-            </span>
-
-            <span>
-                {{ item.total_price }}
-            </span>
+            </nav>
 
         </div>
 
-    {% endfor %}
+    </div>
+
+</div>
+
+<!-- Breadcrumb End -->
 
 
-    <div class="summary-total">
 
-        <span>Total</span>
+<!-- Checkout Start -->
 
-        <span>{{ total }}</span>
+<div class="container-fluid">
+
+    <div class="row px-xl-5">
+
+
+        <!-- Shipping Information -->
+
+        <div class="col-lg-8">
+
+
+            <h5
+                class="section-title position-relative text-uppercase mb-3"
+            >
+
+                <span class="bg-secondary pr-3">
+                    Shipping Information
+                </span>
+
+            </h5>
+
+
+            <div class="bg-light p-30 mb-5">
+
+
+                {% for m in messages %}
+
+                    <div class="alert alert-{{ m.tags }} mb-4">
+
+                        {{ m }}
+
+                    </div>
+
+                {% endfor %}
+
+
+
+                <form
+                    method="POST"
+                >
+
+                    {% csrf_token %}
+
+
+                    <div class="row">
+
+
+                        <!-- Full Name -->
+
+                        <div class="col-md-12 form-group">
+
+                            <label>
+                                Full Name
+                            </label>
+
+                            {{ form.full_name }}
+
+                            {% if form.full_name.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.full_name.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Full Name End -->
+
+
+
+                        <!-- Phone -->
+
+                        <div class="col-md-12 form-group">
+
+                            <label>
+                                Phone
+                            </label>
+
+                            {{ form.phone }}
+
+                            {% if form.phone.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.phone.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Phone End -->
+
+
+
+                        <!-- Address -->
+
+                        <div class="col-md-12 form-group">
+
+                            <label>
+                                Address
+                            </label>
+
+                            {{ form.address }}
+
+                            {% if form.address.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.address.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Address End -->
+
+
+                    </div>
+
+
+                    <!-- Place Order -->
+
+                    <button
+                        type="submit"
+                        class="btn btn-block btn-primary font-weight-bold py-3"
+                    >
+                        Place Order
+                    </button>
+
+                    <!-- Place Order End -->
+
+
+                </form>
+
+
+                <!-- Back To Cart -->
+
+                <a
+                    href="{% url 'cart:detail' %}"
+                    class="btn btn-block btn-secondary font-weight-bold py-3 mt-3"
+                >
+                    Back To Cart
+                </a>
+
+                <!-- Back To Cart End -->
+
+
+            </div>
+
+
+        </div>
+
+        <!-- Shipping Information End -->
+
+
+
+        <!-- Order Summary -->
+
+        <div class="col-lg-4">
+
+
+            <h5
+                class="section-title position-relative text-uppercase mb-3"
+            >
+
+                <span class="bg-secondary pr-3">
+                    Order Total
+                </span>
+
+            </h5>
+
+
+            <div class="bg-light p-30 mb-5">
+
+
+                <!-- Products -->
+
+                <div class="border-bottom">
+
+                    <h6 class="mb-3">
+                        Products
+                    </h6>
+
+
+                    {% for item in items %}
+
+                        <div
+                            class="d-flex justify-content-between"
+                        >
+
+                            <p>
+                                {{ item.product.name }}
+                                x {{ item.quantity }}
+                            </p>
+
+                            <p>
+                                ${{ item.total_price }}
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+                <!-- Products End -->
+
+
+
+
+                <!-- Total -->
+
+                <div class="pt-2">
+
+                    <div
+                        class="d-flex justify-content-between mt-2"
+                    >
+
+                        <h5>
+                            Total
+                        </h5>
+
+                        <h5>
+                            ${{ total }}
+                        </h5>
+
+                    </div>
+
+                </div>
+
+                <!-- Total End -->
+
+
+            </div>
+
+
+
+        </div>
+
+        <!-- Order Summary End -->
+
 
     </div>
 
+</div>
 
-    <h3>
-        Shipping Information
-    </h3>
+<!-- Checkout End -->
 
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <button
-            type="submit"
-            class="save-button"
-        >
-            Place Order
-        </button>
-
-    </form>
-
-
-    <div class="profile-links">
-
-        <a href="{% url 'cart:detail' %}">
-            Back to Cart
-        </a>
-
-    </div>
 
 {% endblock %}
