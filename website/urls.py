@@ -8,5 +8,5 @@ urlpatterns = [
     path("checkout/", checkout, name="checkout"),
     path("contact/", contact, name="contact"),
     # path("detail/", detail, name="detail"),
-    path("cart/", cart, name="cart"),
+    # path("cart/", cart, name="cart"),
 ]

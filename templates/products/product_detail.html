@@ -7,6 +7,7 @@
 <div class="container-fluid">
     <div class="row px-xl-5">
         <div class="col-12">
+
             <nav class="breadcrumb bg-light mb-30">
 
                 <a
@@ -24,6 +25,7 @@
                 </a>
 
             </nav>
+
         </div>
     </div>
 </div>
@@ -97,13 +99,15 @@
 
             <div class="h-100 bg-light p-30">
 
-                <h3>{{ product.name }}</h3>
+                <h3>
+                    {{ product.name }}
+                </h3>
 
 
                 <!-- Average Rating -->
                 <div class="d-flex align-items-center mb-3">
 
-                    {% if product.average_rating %}
+                    {% if product.rating_count > 0 %}
 
                         <div class="product-rating">
 
@@ -113,11 +117,13 @@
                                 <span class="star">★</span>
                             {% endif %}
 
+
                             {% if product.average_rating >= 2 %}
                                 <span class="star filled">★</span>
                             {% else %}
                                 <span class="star">★</span>
                             {% endif %}
+
 
                             {% if product.average_rating >= 3 %}
                                 <span class="star filled">★</span>
@@ -125,11 +131,13 @@
                                 <span class="star">★</span>
                             {% endif %}
 
+
                             {% if product.average_rating >= 4 %}
                                 <span class="star filled">★</span>
                             {% else %}
                                 <span class="star">★</span>
                             {% endif %}
+
 
                             {% if product.average_rating >= 5 %}
                                 <span class="star filled">★</span>
@@ -139,8 +147,10 @@
 
                         </div>
 
+
                         <span class="rating-number">
                             {{ product.average_rating }} / 5
+                            ({{ product.rating_count }})
                         </span>
 
                     {% else %}
@@ -167,9 +177,16 @@
                 </p>
 
 
-                <!-- Quantity & Cart -->
-                <div class="d-flex align-items-center mb-4 pt-2">
+                <!-- Add To Cart -->
+                <form
+                    method="post"
+                    action="{% url 'cart:add' product_id=product.pk %}"
+                    class="d-flex align-items-center mb-4 pt-2"
+                >
 
+                    {% csrf_token %}
+
+                    <!-- Quantity -->
                     <div
                         class="input-group quantity mr-3"
                         style="width: 130px;"
@@ -177,29 +194,54 @@
 
                         <div class="input-group-btn">
 
-                            <button class="btn btn-primary btn-minus">
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-minus"
+                            >
                                 <i class="fa fa-minus"></i>
                             </button>
 
                         </div>
 
+
                         <input
-                            type="text"
+                            type="number"
+                            name="quantity"
                             class="form-control bg-secondary border-0 text-center"
                             value="1"
+                            min="1"
+                            max="99999999999"
                         >
+
 
                         <div class="input-group-btn">
 
-                            <button class="btn btn-primary btn-plus">
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-plus"
+                            >
                                 <i class="fa fa-plus"></i>
                             </button>
 
                         </div>
 
                     </div>
+                    <!-- Quantity End -->
 
-                    <button class="btn btn-primary px-3">
+
+                    <!-- Return To Product -->
+                    <input
+                        type="hidden"
+                        name="next"
+                        value="{{ request.path }}"
+                    >
+
+
+                    <!-- Add Button -->
+                    <button
+                        type="submit"
+                        class="btn btn-primary px-3"
+                    >
 
                         <i class="fa fa-shopping-cart mr-1"></i>
 
@@ -207,8 +249,8 @@
 
                     </button>
 
-                </div>
-                <!-- Quantity & Cart End -->
+                </form>
+                <!-- Add To Cart End -->
 
 
                 <!-- Share -->
@@ -222,28 +264,28 @@
 
                         <a
                             class="text-dark px-2"
-                            href=""
+                            href="#"
                         >
                             <i class="fab fa-facebook-f"></i>
                         </a>
 
                         <a
                             class="text-dark px-2"
-                            href=""
+                            href="#"
                         >
                             <i class="fab fa-twitter"></i>
                         </a>
 
                         <a
                             class="text-dark px-2"
-                            href=""
+                            href="#"
                         >
                             <i class="fab fa-linkedin-in"></i>
                         </a>
 
                         <a
                             class="text-dark px-2"
-                            href=""
+                            href="#"
                         >
                             <i class="fab fa-pinterest"></i>
                         </a>
@@ -300,20 +342,7 @@
                     >
 
                         <h4 class="mb-3">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                            Assumenda consequatur delectus laboriosam odio odit quam
-                            repudiandae vel! Fugit ipsam, ipsum? Amet, dicta dolore
-                            doloremque doloribus error ipsa labore, laboriosam libero
-                            minima mollitia nobis qui reiciendis repellat repellendus
-                            sequi, similique vel voluptatem voluptates. Adipisci aliquam
-                            commodi doloribus ex, facere harum provident quos voluptas!
-                            Aperiam deleniti harum iure nemo voluptates? Commodi corporis
-                            dicta fuga inventore iste neque non provident ratione rem
-                            voluptatem! Beatae doloremque hic laboriosam libero maiores
-                            necessitatibus, nemo obcaecati, pariatur porro quis repudiandae
-                            similique sit ut. Commodi doloribus eligendi expedita, fugit
-                            incidunt ipsum itaque labore necessitatibus nihil odio officia
-                            omnis possimus quae quam, quas, quasi reiciendis!
+                            Description
                         </h4>
 
                         <p>
@@ -355,6 +384,7 @@
                                             name="score"
                                             value="1"
                                             id="star1"
+
                                             {% if form.instance.score == 1 %}
                                                 checked
                                             {% endif %}
@@ -370,6 +400,7 @@
                                             name="score"
                                             value="2"
                                             id="star2"
+
                                             {% if form.instance.score == 2 %}
                                                 checked
                                             {% endif %}
@@ -385,6 +416,7 @@
                                             name="score"
                                             value="3"
                                             id="star3"
+
                                             {% if form.instance.score == 3 %}
                                                 checked
                                             {% endif %}
@@ -400,6 +432,7 @@
                                             name="score"
                                             value="4"
                                             id="star4"
+
                                             {% if form.instance.score == 4 %}
                                                 checked
                                             {% endif %}
@@ -415,6 +448,7 @@
                                             name="score"
                                             value="5"
                                             id="star5"
+
                                             {% if form.instance.score == 5 %}
                                                 checked
                                             {% endif %}
@@ -468,7 +502,7 @@
 <!-- Shop Detail End -->
 
 
-<!-- Star Rating CSS -->
+<!-- CSS -->
 <style>
 
     .product-rating {
@@ -525,68 +559,7 @@
     }
 
 </style>
-<!-- Star Rating CSS End -->
-
-
-<!-- Star Rating JavaScript -->
-<script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const stars = document.querySelectorAll(".rating-stars label");
-
-        stars.forEach(function (star, index) {
-
-            star.addEventListener("click", function () {
-
-                stars.forEach(function (item, itemIndex) {
-
-                    if (itemIndex <= index) {
-                        item.classList.add("active");
-                    } else {
-                        item.classList.remove("active");
-                    }
-
-                });
-
-            });
-
-        });
-
-        const checkedInput = document.querySelector(
-            '.rating-stars input:checked'
-        );
-
-        if (checkedInput) {
-
-            const checkedLabel = document.querySelector(
-                'label[for="' + checkedInput.id + '"]'
-            );
-
-            if (checkedLabel) {
-
-                const checkedIndex = Array.from(stars).indexOf(
-                    checkedLabel
-                );
-
-                stars.forEach(function (item, itemIndex) {
-
-                    if (itemIndex <= checkedIndex) {
-                        item.classList.add("active");
-                    } else {
-                        item.classList.remove("active");
-                    }
-
-                });
-
-            }
-
-        }
-
-    });
-
-</script>
-<!-- Star Rating JavaScript End -->
+<!-- CSS End -->
 
 
 {% endblock %}

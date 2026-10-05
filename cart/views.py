@@ -25,6 +25,7 @@ def cart_detail(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
     items = cart.items.select_related("product")
     return render(request, "carts/cart_detail.html", {"cart": cart, "items": items})
+    # return render(request, "cart.html", {"cart": cart, "items": items})
 
 
 @login_required

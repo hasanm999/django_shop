@@ -20,5 +20,5 @@ def contact(request):
 # def shop(request):
 #     return render(request, 'shop_list.html')
 
-def cart(request):
-    return render(request, 'cart.html')
+# def cart(request):
+#     return render(request, 'cart.html')
