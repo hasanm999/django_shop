@@ -8,7 +8,7 @@ This project is a basic online shop created to practice Django and understand ho
 
 ## ⚠️ Project Note
 
-> **This project was developed in 12 days as a learning and practice project.**
+> **This project was developed in 10 days as a learning and practice project.**
 
 Please don't expect this to be a huge, highly optimized, production-ready, or professionally engineered e-commerce platform. 😄
 
