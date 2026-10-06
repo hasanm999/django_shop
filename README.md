@@ -39,7 +39,7 @@ That's okay.
 This project is mainly a **learning project**, not a production-level e-commerce system.
 
 **In short:**
-This is a simple Django shop built in **12 days** to practice and understand the basics of developing a complete web application.
+This is a simple Django shop built in **10 days** to practice and understand the basics of developing a complete web application.
 
 ---
 
