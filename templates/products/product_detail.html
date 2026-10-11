@@ -346,7 +346,7 @@
                         </h4>
 
                         <p>
-                            {{ product.description }}
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. A dolore enim molestiae quaerat rem sint soluta totam. Accusantium ad alias at aut consectetur doloremque eveniet officiis optio repudiandae, tempore totam velit, veniam, veritatis voluptates voluptatum. Aliquid, error incidunt ipsam magni natus nesciunt nisi, quas quos, reiciendis reprehenderit tempora tempore vel.
                         </p>
 
                     </div>
@@ -477,7 +477,7 @@
 
                             <p>
 
-                                <a href="{% url 'account_login' %}">
+                                <a href="{% url 'accounts:login' %}">
                                     Log in
                                 </a>
 
@@ -531,35 +531,141 @@
     }
 
 
-    .rating-stars {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        width: fit-content;
+.rating-stars {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: fit-content;
+    gap: 3px;
+}
+
+.rating-stars input {
+    display: none;
+}
+
+.rating-stars label {
+    font-size: 38px;
+    color: #ccc;
+    cursor: pointer;
+    margin: 0;
+    line-height: 1;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+    user-select: none;
+}
+
+/* رنگ ستاره‌های انتخاب‌شده */
+.rating-stars label.active {
+    color: #ffc107;
+}
+
+/* افکت هنگام حرکت موس */
+.rating-stars label:hover,
+.rating-stars label.hovered {
+    color: #ffb300;
+    transform: scale(1.15);
+}
+
+/* انیمیشن لحظه انتخاب */
+.rating-stars label.selected {
+    animation: star-pop 0.3s ease;
+}
+
+@keyframes star-pop {
+    0% {
+        transform: scale(1);
     }
 
-    .rating-stars input {
-        display: none;
+    50% {
+        transform: scale(1.3);
     }
 
-    .rating-stars label {
-        font-size: 38px;
-        color: #ccc;
-        cursor: pointer;
-        margin-right: 3px;
-        transition: color 0.2s;
+    100% {
+        transform: scale(1);
     }
-
-    .rating-stars label:hover {
-        color: #ffc107;
-    }
-
-    .rating-stars label.active {
-        color: #ffc107;
-    }
+}
 
 </style>
 <!-- CSS End -->
 
+<!-- Rating Animation JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ratingContainers = document.querySelectorAll('.rating-stars');
+
+    ratingContainers.forEach(function (container) {
+        const inputs = container.querySelectorAll('input[name="score"]');
+        const labels = container.querySelectorAll('label');
+
+        // دریافت امتیاز انتخاب‌شده
+        function getSelectedScore() {
+            const selectedInput = container.querySelector(
+                'input[name="score"]:checked'
+            );
+
+            return selectedInput ? Number(selectedInput.value) : 0;
+        }
+
+        // نمایش ستاره‌ها بر اساس امتیاز
+        function highlightStars(score) {
+            labels.forEach(function (label) {
+                const input = document.getElementById(label.htmlFor);
+                const value = Number(input.value);
+
+                label.classList.toggle('active', value <= score);
+                label.classList.remove('hovered');
+            });
+        }
+
+        // نمایش امتیاز قبلی
+        highlightStars(getSelectedScore());
+
+        // هاور روی ستاره‌ها
+        labels.forEach(function (label) {
+            label.addEventListener('mouseenter', function () {
+                const input = document.getElementById(label.htmlFor);
+                const score = Number(input.value);
+
+                // به‌روزرسانی کامل رنگ ستاره‌ها
+                highlightStars(score);
+
+                // افکت ستاره‌ای که موس روی آن است
+                label.classList.add('hovered');
+            });
+        });
+
+        // انتخاب امتیاز با کلیک
+        inputs.forEach(function (input) {
+            input.addEventListener('change', function () {
+                highlightStars(Number(input.value));
+
+                const label = container.querySelector(
+                    'label[for="' + input.id + '"]'
+                );
+
+                if (label) {
+                    label.classList.remove('selected');
+
+                    // اجرای مجدد انیمیشن
+                    void label.offsetWidth;
+
+                    label.classList.add('selected');
+
+                    setTimeout(function () {
+                        label.classList.remove('selected');
+                    }, 300);
+                }
+            });
+        });
+
+        // بازگشت به امتیاز انتخاب‌شده پس از خروج موس
+        container.addEventListener('mouseleave', function () {
+            highlightStars(getSelectedScore());
+        });
+    });
+});
+</script>
 
 {% endblock %}
