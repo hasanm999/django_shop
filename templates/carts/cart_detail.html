@@ -141,56 +141,43 @@
                                 {% csrf_token %}
 
 
-                                <div
-                                    class="input-group quantity"
-                                    style="width: 130px;"
-                                >
 
+<div
+    class="input-group quantity"
+    style="width: 200px; min-width: 200px;"
+>
+    <!-- Minus -->
+    <div class="input-group-btn">
+        <button
+            type="button"
+            class="btn btn-primary btn-minus"
+        >
+            <i class="fa fa-minus"></i>
+        </button>
+    </div>
 
-                                    <!-- Minus -->
-                                    <div class="input-group-btn">
+    <!-- Quantity Input -->
+    <input
+        type="number"
+        name="quantity"
+        class="form-control bg-secondary border-0 text-center"
+        style="min-width: 100px; padding: 0 5px;"
+        value="{{ item.quantity }}"
+        min="1"
+        max="99999999999"
+    >
 
-                                        <button
-                                            type="button"
-                                            class="btn btn-primary btn-minus"
-                                        >
+    <!-- Plus -->
+    <div class="input-group-btn">
+        <button
+            type="button"
+            class="btn btn-primary btn-plus"
+        >
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+</div>
 
-                                            <i class="fa fa-minus"></i>
-
-                                        </button>
-
-                                    </div>
-                                    <!-- Minus End -->
-
-
-                                    <!-- Quantity Input -->
-                                    <input
-                                        type="number"
-                                        name="quantity"
-                                        class="form-control bg-secondary border-0 text-center"
-                                        value="{{ item.quantity }}"
-                                        min="1"
-                                        max="99999999999"
-                                    >
-                                    <!-- Quantity Input End -->
-
-
-                                    <!-- Plus -->
-                                    <div class="input-group-btn">
-
-                                        <button
-                                            type="button"
-                                            class="btn btn-primary btn-plus"
-                                        >
-
-                                            <i class="fa fa-plus"></i>
-
-                                        </button>
-
-                                    </div>
-                                    <!-- Plus End -->
-
-                                </div>
 
 
                                 <!-- Update Button -->
@@ -372,5 +359,30 @@
 </div>
 <!-- Cart End -->
 
+<style>
+    /* Quantity input */
+    .quantity {
+        width: 200px !important;
+        min-width: 200px;
+    }
+
+    .quantity input[type="number"] {
+        min-width: 100px;
+        padding: 0 5px;
+        font-size: 14px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .quantity .btn {
+        padding: 8px 10px;
+        flex-shrink: 0;
+    }
+
+    /* Keep quantity controls aligned */
+    td .quantity {
+        flex-shrink: 0;
+    }
+</style>
 
 {% endblock %}
